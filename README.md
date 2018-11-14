@@ -14,6 +14,7 @@ First clone the repo with its submodule:
 This project is a CMake project. To build this project with some runnables you should do
 
 ```
+cd ../..
 mkdir build
 cd build
 cmake ..
