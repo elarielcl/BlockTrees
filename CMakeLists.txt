@@ -24,17 +24,10 @@ add_executable(experiments_padding_block_tree experiments_padding_block_tree.cpp
 
 
 include_directories(includes)
-#include_directories(external)
 include_directories(external/sdsl-lite/include)
-
-#include_directories(external/cst.jouni/libraries/TextIndexes/includes)
-#include_directories(external/cst.jouni/libraries/libcds2/includes)
-#include_directories(external/cst.jouni/cst_rep/includes)
-
 
 add_subdirectory(src)
 #add_subdirectory(tests)
-#add_subdirectory(external/sdsl-lite)
 
 #add_subdirectory(external/cst.jouni)
 
