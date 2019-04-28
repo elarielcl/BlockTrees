@@ -45,6 +45,10 @@ target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libdivsufs
 bt->clean_unnecessary_expansions(); // This method removes the expansion of InternalBlocks that are unnecesary (this is an state-of-the-art space improvement, also called pruning)
   ...
  ```
+  in case you want to build the heuristic_bt version instead you can replace the last two lines with
+ ```
+ bt->process_back_pointers_heuristic();
+ ```
  .. now you have a proper BlockTree answering access queries(`bt->access(i)`), if you want to give it ``bt->rank(c,i) & bt->select(c,j)`` support you should do:
  ```
  for (int c: characters)
