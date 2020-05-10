@@ -9,8 +9,6 @@
 
 class PLeafBlock : public PBlock {
 public:
-    std::string data_;
-    std::basic_string<int64_t> wdata_;
 
     PLeafBlock(PBlock*, int64_t, int64_t, int, int, std::string&, int);
     PLeafBlock(PBlock*, int64_t, int64_t, int, int, std::basic_string<int64_t>&, int);
@@ -22,6 +20,7 @@ public:
     int64_t better_differential_access(int);
     int64_t differential_access(int);
     int64_t differential_access_alternative(int);
+    int64_t size();
     int rank(int, int);
 
     int test_rank(int, int, int&);
