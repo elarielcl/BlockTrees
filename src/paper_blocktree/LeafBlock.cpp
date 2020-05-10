@@ -7,7 +7,8 @@
 #include "paper_blocktree/LeafBlock.h"
 
 LeafBlock::LeafBlock(Block* parent, int start_index, int end_index, int r, int max_leaf_length, std::string& source, int child_number):
-        Block(parent, start_index, end_index, r, max_leaf_length, source, child_number), data_(source.substr(start_index, end_index-start_index+1)) {
+        Block(parent, start_index, end_index, r, max_leaf_length, source, child_number) {
+    size =  source.substr(start_index, end_index-start_index+1).size();
 }
 
 LeafBlock::~LeafBlock() {
@@ -46,7 +47,7 @@ int LeafBlock::leaf_rank(int i) {
     int r = 0;
     bool one_seen = starts_with_end_leaf_;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == source_[0]) {
+        if (source_[start_index_+j] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -63,7 +64,7 @@ int LeafBlock::leaf_rank_alternative(int i) {
     int r = 0;
     bool one_seen = starts_with_end_leaf_;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == source_[0]) {
+        if (source_[start_index_+j] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -80,7 +81,7 @@ int LeafBlock::better_leaf_rank(int i) {
     int r = 0;
     bool one_seen = starts_with_end_leaf_;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == source_[0]) {
+        if (source_[start_index_+j] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -97,7 +98,7 @@ int LeafBlock::better_leaf_rank(int i) {
 int LeafBlock::rank(int c, int i) {
     int r = 0;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == c) ++r;
+        if (source_[start_index_+j] == c) ++r;
     }
     return r;
 }
@@ -105,7 +106,7 @@ int LeafBlock::rank(int c, int i) {
 int LeafBlock::rank_alternative(int c, int i) {
     int r = 0;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == c) ++r;
+        if (source_[start_index_+j] == c) ++r;
     }
     return r;
 }
@@ -113,7 +114,7 @@ int LeafBlock::rank_alternative(int c, int i) {
 int LeafBlock::better_rank(int c, int i) {
     int r = 0;
     for (int j = 0; j<=i; ++j) {
-        if (data_[j] == c) ++r;
+        if (source_[start_index_+j] == c) ++r;
     }
     return r;
 }
@@ -121,8 +122,8 @@ int LeafBlock::better_rank(int c, int i) {
 int LeafBlock::leaf_select(int j) {
     if (starts_with_end_leaf_ && j == 1) return -1;
     bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < data_.size(); ++i) {
-        if (data_[i] == source_[0]) {
+    for (int i = 0; i < size; ++i) {
+        if (source_[start_index_+i] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -139,8 +140,8 @@ int LeafBlock::leaf_select(int j) {
 int LeafBlock::leaf_select_alternative(int j) {
     if (starts_with_end_leaf_ && j == 1) return -1;
     bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < data_.size(); ++i) {
-        if (data_[i] == source_[0]) {
+    for (int i = 0; i < size; ++i) {
+        if (source_[start_index_+i] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -156,8 +157,8 @@ int LeafBlock::leaf_select_alternative(int j) {
 int LeafBlock::better_leaf_select(int j) {
     if (starts_with_end_leaf_ && j == 1) return -1;
     bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < data_.size(); ++i) {
-        if (data_[i] == source_[0]) {
+    for (int i = 0; i < size; ++i) {
+        if (source_[start_index_+i] == source_[0]) {
             one_seen = true;
         } else {
             if (one_seen) {
@@ -171,8 +172,8 @@ int LeafBlock::better_leaf_select(int j) {
 }
 
 int LeafBlock::select(int c, int j) {
-    for (int i = 0; i < data_.size(); ++i) {
-        if (((int)(data_[i])) == c) --j;
+    for (int i = 0; i < size; ++i) {
+        if (((int)(source_[start_index_+i])) == c) --j;
         if (!j) return i;
     }
     return -1;
@@ -180,31 +181,31 @@ int LeafBlock::select(int c, int j) {
 
 
 int LeafBlock::select_alternative(int c, int j) {
-    for (int i = 0; i < data_.size(); ++i) {
-        if (((int)(data_[i])) == c) --j;
+    for (int i = 0; i < size; ++i) {
+        if (((int)(source_[start_index_+i])) == c) --j;
         if (!j) return i;
     }
     return -1;
 }
 
 int LeafBlock::better_select(int c, int j) {
-    for (int i = 0; i < data_.size(); ++i) {
-        if (((int)(data_[i])) == c) --j;
+    for (int i = 0; i < size; ++i) {
+        if (((int)(source_[start_index_+i])) == c) --j;
         if (!j) return i;
     }
     return -1;
 }
 
 void LeafBlock::print() {
-    std::cout << "\"" << data_ << "\" ";
+    std::cout << "\"" << source_.substr(start_index_, size) << "\" ";
 }
 
 int LeafBlock::access(int i) {
-    return data_[i];
+    return source_[start_index_+i];
 }
 
 int LeafBlock::access_2(int i, int& a) {
-    return data_[i];
+    return source_[start_index_+i];
 }
 
 bool LeafBlock::check_heuristic() {

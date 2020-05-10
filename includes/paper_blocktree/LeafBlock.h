@@ -9,7 +9,7 @@
 
 class LeafBlock : public Block {
 public:
-    std::string data_;
+    int size;
     LeafBlock(Block*, int, int, int, int, std::string&, int);
     ~LeafBlock();
 
