@@ -8,7 +8,7 @@
 
 BackBlock::BackBlock(Block* parent, int start_index, int end_index, int r, int max_leaf_length, std::string& source, int child_number, Block* first_block,
                      Block* second_block, int offset) :
-        Block(parent, start_index, end_index, r, max_leaf_length, source, child_number), suffix_start_with_end_leaf_(false), prefix_start_with_end_leaf_(false) {
+        Block(parent, start_index, end_index, r, max_leaf_length, source, child_number) {
     first_block_ = first_block;
     if (second_block != nullptr)
         if (second_block->start_index_ == start_index && second_block->end_index_ == end_index) second_block_ = this;
@@ -30,48 +30,6 @@ BackBlock::~BackBlock() {
             second_block_->color_ = 0;
     }
 }
-
-int BackBlock::add_rank_select_leaf_support() {
-    starts_with_end_leaf_ = source_[start_index_] != source_[0] && source_[start_index_-1] == source_[0];
-    suffix_start_with_end_leaf_ = source_[first_block_->start_index_+offset_] != source_[0] && source_[first_block_->start_index_+offset_-1] == source_[0];
-    prefix_start_with_end_leaf_ = source_[start_index_+first_block_->length()-offset_] != source_[0] && source_[start_index_+first_block_->length()-offset_-1] == source_[0];
-    int first_rank = (offset_ == 0) ? 0 : first_block_->leaf_rank(offset_ - 1);
-    int second_rank = (second_block_ == nullptr) ?
-                      first_block_->leaf_rank(offset_ + length() - 1) - first_rank :
-                      first_block_->leaf_rank(first_block_->length() - 1) - first_rank;
-    first_leaf_rank_ = first_rank;
-    second_leaf_rank_ = second_rank;
-    /*
-    if (is_leaf_end(first_block_->start_index_ + offset_) && !is_leaf_end(start_index_)) {
-        ++first_leaf_rank_;
-        --second_leaf_rank_;
-    }
-    if (!is_leaf_end(first_block_->start_index_ + offset_) && is_leaf_end(start_index_)) {
-        --first_leaf_rank_;
-        ++second_leaf_rank_;
-    }
-
-    if (second_block_ != nullptr) {
-        if (is_leaf_end(second_block_->start_index_) && !is_leaf_end(start_index_+first_block_->length()-offset_)) {
-            --second_leaf_rank_;
-        }
-        if (!is_leaf_end(second_block_->start_index_) && is_leaf_end(start_index_+first_block_->length()-offset_)) {
-            ++second_leaf_rank_;
-        }
-    }
-    */
-    leaf_rank_ = (second_block_ == nullptr) ? second_leaf_rank_ : second_leaf_rank_ + second_block_->leaf_rank(
-            offset_ + length() - 1 - first_block_->length());
-
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++leaf_rank_;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --leaf_rank_;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --leaf_rank_;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++leaf_rank_;
-    }
-    return leaf_rank_;
-}
-
 
 int BackBlock::add_rank_select_support(int c) {
     int first_rank = first_block_->rank(c, offset_-1);
@@ -128,138 +86,6 @@ int BackBlock::better_select(int c, int j) {
     if (j > second_ranks_[c]) return second_block_->better_select(c, j-second_ranks_[c]) + first_block_->length() - offset_;
     return first_block_->better_select(c, j+((first_block_->child_number_ == 0) ? first_block_->cumulated_ranks_[c] :
                                              (first_block_->cumulated_ranks_[c] - first_block_->parent_->children_[first_block_->child_number_-1]->cumulated_ranks_[c])) - second_ranks_[c]) - offset_;
-}
-
-
-int BackBlock::leaf_rank(int i) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-
-    if (i + offset_ >= first_block_->length()) return separated_blocks_value + different_start_value + second_leaf_rank_ + second_block_->leaf_rank(offset_+i-first_block_->length()); //Loop if it's itself
-    return different_start_value + first_block_->leaf_rank(i+offset_) - first_leaf_rank_;
-}
-
-int BackBlock::leaf_rank_alternative(int i) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-
-    if (!offset_) {
-        if (i >= first_block_->length()) {
-            return different_start_value + separated_blocks_value + second_leaf_rank_ + second_block_->leaf_rank_alternative(i-first_block_->length()); //Loop if it's itself
-        }
-
-        return different_start_value + first_block_->leaf_rank_alternative(i);
-    }
-    if (i + offset_ >= first_block_->length()) return separated_blocks_value+different_start_value+ second_leaf_rank_ + second_block_->leaf_rank_alternative(offset_+i-first_block_->length()); //Loop if it's itself
-    return different_start_value + first_block_->leaf_rank_alternative(i+offset_) - (first_block_->leaf_rank_ - second_leaf_rank_);
-}
-
-int BackBlock::better_leaf_rank(int i) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-    if (!offset_) {
-        if (i >= first_block_->length()) return different_start_value + separated_blocks_value + second_leaf_rank_ + second_block_->better_leaf_rank(i-first_block_->length()); //Loop if it's itself
-        return different_start_value + first_block_->better_leaf_rank(i);
-    }
-    if (i + offset_ >= first_block_->length()) return different_start_value + separated_blocks_value + second_leaf_rank_ + second_block_->better_leaf_rank(offset_+i-first_block_->length()); //Loop if it's itself
-    return different_start_value + first_block_->better_leaf_rank(i+offset_) - (((first_block_->child_number_ == 0) ? first_block_->cumulated_leaf_rank_ :
-                                                       (first_block_->cumulated_leaf_rank_ - first_block_->parent_->children_[first_block_->child_number_-1]->cumulated_leaf_rank_)) - second_leaf_rank_);
-}
-
-int BackBlock::leaf_select(int j) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-
-    if (j > different_start_value + second_leaf_rank_) {
-        if (j - different_start_value - second_leaf_rank_ == 1 && separated_blocks_value == 1) return first_block_->length()-offset_-1;
-        return second_block_->leaf_select(j-second_leaf_rank_-different_start_value-separated_blocks_value) + first_block_->length() - offset_;
-    }
-
-    if (j == different_start_value) return -1;
-    return first_block_->leaf_select(j+first_leaf_rank_-different_start_value) - offset_;
-}
-
-int BackBlock::leaf_select_alternative(int j) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-
-    if (offset_ == 0) {
-        if (j > different_start_value + second_leaf_rank_){
-            if (j - different_start_value - second_leaf_rank_ == 1 && separated_blocks_value == 1) return first_block_->length()-offset_-1;
-            return second_block_->leaf_select_alternative(j-second_leaf_rank_-different_start_value-separated_blocks_value) + first_block_->length();
-        }
-        if (j == different_start_value) return -1;
-        return first_block_->leaf_select_alternative(j+first_leaf_rank_-different_start_value);
-    }
-
-
-    if (j > different_start_value + second_leaf_rank_) {
-        if (j - different_start_value - second_leaf_rank_ == 1 && separated_blocks_value == 1) return first_block_->length()-offset_-1;
-        return second_block_->leaf_select_alternative(j-second_leaf_rank_-different_start_value-separated_blocks_value) + first_block_->length() - offset_;
-    }
-
-    if (j == different_start_value) return -1;
-    return first_block_->leaf_select_alternative(j+(first_block_->leaf_rank_ - second_leaf_rank_)-different_start_value) - offset_;
-}
-
-int BackBlock::better_leaf_select(int j) {
-    int different_start_value = 0;
-    if (starts_with_end_leaf_ && !suffix_start_with_end_leaf_) ++different_start_value;
-    if (!starts_with_end_leaf_ && suffix_start_with_end_leaf_) --different_start_value;
-    int separated_blocks_value = 0;
-    if (second_block_ != nullptr) {
-        if (second_block_->starts_with_end_leaf_ && !prefix_start_with_end_leaf_) --separated_blocks_value;
-        if (!second_block_->starts_with_end_leaf_ && prefix_start_with_end_leaf_) ++separated_blocks_value;
-    }
-
-    if (offset_ == 0) {
-        if (j > different_start_value + second_leaf_rank_){
-            if (j - different_start_value - second_leaf_rank_ == 1 && separated_blocks_value == 1) return first_block_->length()-offset_-1;
-            return second_block_->better_leaf_select(j-second_leaf_rank_-different_start_value-separated_blocks_value) + first_block_->length();
-        }
-        if (j == different_start_value) return -1;
-        return first_block_->better_leaf_select(j+first_leaf_rank_-different_start_value);
-    }
-
-
-    if (j > different_start_value + second_leaf_rank_) {
-        if (j - different_start_value - second_leaf_rank_ == 1 && separated_blocks_value == 1) return first_block_->length()-offset_-1;
-        return second_block_->better_leaf_select(j-second_leaf_rank_-different_start_value-separated_blocks_value) + first_block_->length() - offset_;
-    }
-
-    if (j == different_start_value) return -1;
-    return first_block_->better_leaf_select(j+(((first_block_->child_number_ == 0) ? first_block_->cumulated_leaf_rank_ :
-                                                (first_block_->cumulated_leaf_rank_ - first_block_->parent_->children_[first_block_->child_number_-1]->cumulated_leaf_rank_)) - second_leaf_rank_)-different_start_value) - offset_;
 }
 
 void BackBlock::print() {

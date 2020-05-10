@@ -15,7 +15,6 @@ add_executable(check_color_block_tree paper_blocktree/ColorBlockTreeFixture.cpp)
 add_executable(check_color_pruning_block_tree paper_blocktree/ColorPruningBlockTreeFixture.cpp)
 add_executable(check_reverse_color_block_tree paper_blocktree/ReverseColorBlockTreeFixture.cpp)
 add_executable(check_c_block_tree compressed/CBlockTreeFixture.cpp)
-add_executable(check_bps_c compressed/BPSCBlockTreeFixture.cpp)
 
 
 add_executable(check_p_c_block_tree compressed/PCBlockTreeFixture.cpp)
@@ -39,12 +38,6 @@ add_executable(check_p_real_conservative_optimized_heuristic_block_tree padding_
 add_executable(check_p_liberal_heuristic_block_tree padding_blocktree/PLiberalHeuristicBlockTreeFixture.cpp)
 add_executable(check_p_heuristic_concatenate_block_tree padding_blocktree/PHeuristicConcatenateBlockTreeFixture.cpp)
 add_executable(check_p_heuristic_block_tree padding_blocktree/PHeuristicBlockTreeFixture.cpp)
-add_executable(check_bps_pc compressed/BPSPCBlockTreeFixture.cpp)
-add_executable(check_pbtrlcsacst compressed/PBTRLCSACSTFixture.cpp)
-add_executable(check_pbtisarlcsacst compressed/PBTISARLCSACSTFixture.cpp)
-add_executable(check_pbtcst compressed/PBTCSTFixture.cpp)
-add_executable(check_cst_sada_rlcsa compressed/CST_SADA_RLCSAFixture.cpp)
-add_executable(check_cst_sct3_rlcsa compressed/CST_SCT3_RLCSAFixture.cpp)
 
 add_subdirectory(googletest)
 
@@ -164,64 +157,3 @@ target_link_libraries(check_p_c_block_tree blocktree)
 target_link_libraries(check_p_c_block_tree ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
 target_link_libraries(check_p_c_block_tree ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
 target_link_libraries(check_p_c_block_tree ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-
-
-
-target_link_libraries(check_bps_c gtest gtest_main)
-target_link_libraries(check_bps_c blocktree)
-target_link_libraries(check_bps_c ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_bps_c ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_bps_c ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-
-target_link_libraries(check_bps_pc gtest gtest_main)
-target_link_libraries(check_bps_pc blocktree)
-target_link_libraries(check_bps_pc ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_bps_pc ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_bps_pc ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-
-target_link_libraries(check_pbtcst gtest gtest_main)
-target_link_libraries(check_pbtcst blocktree)
-target_link_libraries(check_pbtcst ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_pbtcst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_pbtcst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-
-target_link_libraries(check_pbtrlcsacst gtest gtest_main)
-target_link_libraries(check_pbtrlcsacst blocktree)
-target_link_libraries(check_pbtrlcsacst ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_pbtrlcsacst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_pbtrlcsacst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-target_link_libraries(check_pbtrlcsacst gctbio)
-target_link_libraries(check_pbtrlcsacst textIndexes)
-target_link_libraries(check_pbtrlcsacst cds)
-
-
-
-target_link_libraries(check_pbtisarlcsacst gtest gtest_main)
-target_link_libraries(check_pbtisarlcsacst blocktree)
-target_link_libraries(check_pbtisarlcsacst ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_pbtisarlcsacst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_pbtisarlcsacst ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-target_link_libraries(check_pbtisarlcsacst gctbio)
-target_link_libraries(check_pbtisarlcsacst textIndexes)
-target_link_libraries(check_pbtisarlcsacst cds)
-
-
-target_link_libraries(check_cst_sada_rlcsa gtest gtest_main)
-target_link_libraries(check_cst_sada_rlcsa blocktree)
-target_link_libraries(check_cst_sada_rlcsa ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_cst_sada_rlcsa ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_cst_sada_rlcsa ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-target_link_libraries(check_cst_sada_rlcsa gctbio)
-target_link_libraries(check_cst_sada_rlcsa textIndexes)
-target_link_libraries(check_cst_sada_rlcsa cds)
-
-
-
-target_link_libraries(check_cst_sct3_rlcsa gtest gtest_main)
-target_link_libraries(check_cst_sct3_rlcsa blocktree)
-target_link_libraries(check_cst_sct3_rlcsa ${CMAKE_SOURCE_DIR}/lib/libsdsl.a)
-target_link_libraries(check_cst_sct3_rlcsa ${CMAKE_SOURCE_DIR}/lib/libdivsufsort.a)
-target_link_libraries(check_cst_sct3_rlcsa ${CMAKE_SOURCE_DIR}/lib/libdivsufsort64.a)
-target_link_libraries(check_cst_sct3_rlcsa gctbio)
-target_link_libraries(check_cst_sct3_rlcsa textIndexes)
-target_link_libraries(check_cst_sct3_rlcsa cds)

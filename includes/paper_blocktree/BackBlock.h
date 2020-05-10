@@ -12,8 +12,6 @@ public:
     BackBlock(Block*, int, int, int, int, std::string&, int, Block*, Block*, int);
     ~BackBlock();
 
-    bool suffix_start_with_end_leaf_;
-    bool prefix_start_with_end_leaf_;
     void print();
     int height();
     int access(int);
@@ -24,14 +22,7 @@ public:
     bool contains_double_pointer(bool);
     int number_of_back_blocks();
     int compute_max_hop();
-    int add_rank_select_leaf_support();
     int add_rank_select_support(int);
-    int leaf_rank(int);
-    int leaf_rank_alternative(int);
-    int better_leaf_rank(int);
-    int leaf_select(int);
-    int leaf_select_alternative(int);
-    int better_leaf_select(int);
     int rank(int, int);
     int rank_alternative(int, int);
     int better_rank(int, int);

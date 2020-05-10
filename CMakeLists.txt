@@ -29,8 +29,6 @@ include_directories(external/sdsl-lite/include)
 add_subdirectory(src)
 #add_subdirectory(tests)
 
-#add_subdirectory(external/cst.jouni)
-
 target_link_libraries(main blocktree)
 target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libsdsl.a)
 target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libdivsufsort.a)

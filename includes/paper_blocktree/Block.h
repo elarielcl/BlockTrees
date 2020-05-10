@@ -16,14 +16,8 @@ public:
     int end_index_; // In input string represented by the whole BlockTree
     int r_; // Arity
 
-    std::string& source_;
+    std::string& source_; // Only a reference to the input is stored
 
-
-    int leaf_rank_;
-    int first_leaf_rank_;
-    int second_leaf_rank_;
-    int prefix_leaf_rank_;
-    int cumulated_leaf_rank_;
 
     std::unordered_map<int,int> prefix_ranks_;
     std::unordered_map<int,int> ranks_;
@@ -45,7 +39,6 @@ public:
     int first_occurrence_level_index_;
     int max_hop_;
     int color_;
-    bool starts_with_end_leaf_;
     int fix_reference_;
 
     std::vector<Block*> children_;
@@ -58,21 +51,11 @@ public:
     int length();
     std::string represented_string();
     virtual int add_rank_select_support(int);
-    virtual int add_rank_select_leaf_support();
-
-    virtual int leaf_rank(int);
-    virtual int leaf_rank_alternative(int);
-    virtual int better_leaf_rank(int);
-
 
     virtual int rank(int, int);
     virtual int rank_alternative(int, int);
     virtual int better_rank(int, int);
 
-
-    virtual int leaf_select(int);
-    virtual int leaf_select_alternative(int);
-    virtual int better_leaf_select(int);
 
     virtual int select(int, int);
     virtual int select_alternative(int, int);

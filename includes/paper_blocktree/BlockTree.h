@@ -19,7 +19,6 @@
 class BlockTree {
     void block_scan(std::vector<Block*>&, int, std::unordered_map<int, std::unordered_map<HashString, std::vector<Block*>>>&);
 public:
-    int open_;
     int r_; // Arity
     int max_leaf_length_;
     std::string input_; // Input sequence of the Tree
@@ -54,24 +53,12 @@ public:
     void print_statistics();
     void print_statistics_2();
     void add_rank_select_support(int);
-    void add_rank_select_leaf_support();
     int rank(int, int);
     int rank_alternative(int, int);
     int better_rank(int, int);
     int select(int, int);
     int select_alternative(int, int);
     int better_select(int, int);
-
-
-
-    int leaf_rank(int);
-    int leaf_rank_alternative(int);
-    int better_leaf_rank(int);
-    int leaf_select(int);
-    int leaf_select_alternative(int);
-    int better_leaf_select(int);
-
-
 
     void process_back_pointers_conservative_optimized_heuristic();
     void process_back_pointers_conservative_heuristic();

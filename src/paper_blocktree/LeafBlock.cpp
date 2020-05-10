@@ -15,85 +15,10 @@ LeafBlock::~LeafBlock() {
 
 }
 
-int LeafBlock::add_rank_select_leaf_support() {
-    starts_with_end_leaf_ = source_[start_index_] != source_[0] && source_[start_index_-1] == source_[0];
-    leaf_rank_ = (starts_with_end_leaf_) ? 1 : 0;
-    std::string rep = represented_string();
-    bool one_seen = false;
-
-    for (char c: rep) {
-        if (c == source_[0]) {
-            one_seen = true;
-        }
-        else  {
-            if (one_seen) {
-                ++leaf_rank_;
-            }
-            one_seen = false;
-        }
-    }
-
-    return leaf_rank_;
-}
-
 int LeafBlock::add_rank_select_support(int c) {
     ranks_[c] = rank(c, length()-1);
     return ranks_[c];
 }
-
-
-int LeafBlock::leaf_rank(int i) {
-    if (i == -1) return 0;
-    int r = 0;
-    bool one_seen = starts_with_end_leaf_;
-    for (int j = 0; j<=i; ++j) {
-        if (source_[start_index_+j] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                ++r;
-            }
-            one_seen = false;
-        }
-    }
-    return r;
-}
-
-int LeafBlock::leaf_rank_alternative(int i) {
-    if (i == -1) return 0;
-    int r = 0;
-    bool one_seen = starts_with_end_leaf_;
-    for (int j = 0; j<=i; ++j) {
-        if (source_[start_index_+j] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                ++r;
-            }
-            one_seen = false;
-        }
-    }
-    return r;
-}
-
-int LeafBlock::better_leaf_rank(int i) {
-    if (i == -1) return 0;
-    int r = 0;
-    bool one_seen = starts_with_end_leaf_;
-    for (int j = 0; j<=i; ++j) {
-        if (source_[start_index_+j] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                ++r;
-            }
-            one_seen = false;
-        }
-    }
-    return r;
-}
-
-
 
 int LeafBlock::rank(int c, int i) {
     int r = 0;
@@ -117,58 +42,6 @@ int LeafBlock::better_rank(int c, int i) {
         if (source_[start_index_+j] == c) ++r;
     }
     return r;
-}
-
-int LeafBlock::leaf_select(int j) {
-    if (starts_with_end_leaf_ && j == 1) return -1;
-    bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < size; ++i) {
-        if (source_[start_index_+i] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                --j;
-            }
-            one_seen = false;
-        }
-        if (!j) return i-1;
-    }
-    return -1;
-}
-
-
-int LeafBlock::leaf_select_alternative(int j) {
-    if (starts_with_end_leaf_ && j == 1) return -1;
-    bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < size; ++i) {
-        if (source_[start_index_+i] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                --j;
-            }
-            one_seen = false;
-        }
-        if (!j) return i-1;
-    }
-    return -1;
-}
-
-int LeafBlock::better_leaf_select(int j) {
-    if (starts_with_end_leaf_ && j == 1) return -1;
-    bool one_seen = starts_with_end_leaf_;
-    for (int i = 0; i < size; ++i) {
-        if (source_[start_index_+i] == source_[0]) {
-            one_seen = true;
-        } else {
-            if (one_seen) {
-                --j;
-            }
-            one_seen = false;
-        }
-        if (!j) return i-1;
-    }
-    return -1;
 }
 
 int LeafBlock::select(int c, int j) {

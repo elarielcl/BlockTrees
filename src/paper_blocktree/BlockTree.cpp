@@ -12,7 +12,7 @@
 #include "paper_blocktree/InternalBlock.h"
 
 
-BlockTree::BlockTree(std::string& input, int r, int max_leaf_length): r_(r), input_(input), max_leaf_length_(max_leaf_length), open_(input[0]) {
+BlockTree::BlockTree(std::string& input, int r, int max_leaf_length): r_(r), input_(input), max_leaf_length_(max_leaf_length) {
     if (input.size() <= max_leaf_length_ || input_.size()<r)
         root_block_ = new LeafBlock(nullptr, 0, input_.size()-1, r, max_leaf_length, input_, 0);
     else
@@ -22,10 +22,6 @@ BlockTree::BlockTree(std::string& input, int r, int max_leaf_length): r_(r), inp
 
 BlockTree::~BlockTree() {
     delete root_block_;
-}
-
-void BlockTree::add_rank_select_leaf_support() {
-    root_block_->add_rank_select_leaf_support();
 }
 
 void BlockTree::add_rank_select_support(int c) {
@@ -56,33 +52,6 @@ int BlockTree::better_select(int c, int j) {
     return root_block_->better_select(c, j);
 }
 
-int BlockTree::leaf_rank(int i) {
-    return root_block_->leaf_rank(i);
-}
-
-int BlockTree::leaf_rank_alternative(int i) {
-    return root_block_->leaf_rank_alternative(i);
-}
-
-int BlockTree::better_leaf_rank(int i) {
-    return root_block_->better_leaf_rank(i);
-}
-
-int BlockTree::leaf_select(int j) {
-    return root_block_->leaf_select(j);
-}
-
-int BlockTree::leaf_select_alternative(int j) {
-    return root_block_->leaf_select_alternative(j);
-}
-
-int BlockTree::better_leaf_select(int j) {
-    return root_block_->better_leaf_select(j);
-}
-
-
-
-
 void BlockTree::print_statistics_2() {
     std::cout << "Number of nodes : " << number_of_nodes() << std::endl;
     std::cout << "Number of leaves : " << number_of_leaves() << std::endl;
@@ -112,13 +81,7 @@ void BlockTree::print_statistics() {
     std::cout << "Number of BackBlocks : " << number_of_back_blocks() << std::endl;
     std::cout << "Number of LeafBlocks : " << number_of_leaf_blocks() << std::endl;
     std::cout << std::endl;
-/*
-    bool ok = true;
-    for (int i = 0; i < input_.size(); ++i) {
-        ok = ok && (access(i) == (int) input_[i]);
-    }
-    if (!ok) std::cout << "Error" << std::endl;
-*/
+
 }
 
 std::vector<std::vector<Block*>> BlockTree::levelwise_iterator() {
