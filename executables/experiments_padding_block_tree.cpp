@@ -382,7 +382,7 @@ int main() {
             CBlockTree *cbt = new CBlockTree(bt);
             std::cout << "cbt" << std::endl;
             cbt->print_statistics();
-            experiments(cbt, characters, permutation, select_permutations, input_permutation);
+            executables(cbt, characters, permutation, select_permutations, input_permutation);
             std::cout << std::endl;
 
             delete bt;
@@ -399,7 +399,7 @@ int main() {
             CBlockTree *liberal_heuristic_cbt = new CBlockTree(liberal_heuristic_bt);
             std::cout << "liberal_heuristic_cbt" << std::endl;
             liberal_heuristic_cbt->print_statistics();
-            experiments(liberal_heuristic_cbt, characters, permutation, select_permutations, input_permutation);
+            executables(liberal_heuristic_cbt, characters, permutation, select_permutations, input_permutation);
 
 
             std::cout << std::endl;

@@ -21,13 +21,16 @@ cmake ..
 make
 ```
 
-Finally when you want to create a new executable, you need to add it to the CMakeLists.txt files and link the libraries `blocktree`, `sdsl`, `divsufsort`,  `divsufsort64`, as shown in the following example:
+You can add an executable by writing your file in the `executables` directory and add its name to the `executables/CMakeLists.txt` file, this adds the necessary libraries for you:
 ```
-add_executable(main main.cpp)
+set(project_EXECUTABLES
+        <new_executable>
+        main
+        padding_main
+        inputs
+        experiments_block_tree
+        experiments_padding_block_tree)
 ...
-target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libsdsl.a)
-target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libdivsufsort.a)
-target_link_libraries(main ${CMAKE_SOURCE_DIR}/external/sdsl-lite/lib/libdivsufsort64.a)
 ```
 
  # Usage Guide
