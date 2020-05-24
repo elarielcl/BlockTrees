@@ -1,3 +1,5 @@
+<span>This repository contains all the variants of BlockTrees described in the experimental study available [here](https://users.dcc.uchile.cl/~gnavarro/mem/algoritmos/tesisManuel.pdf). If you are looking for the cannonical version used in the journal article, which is also more reusable and uses less contruction space, you can go to [https://github.com/elarielcl/MinimalistBlockTrees/](https://github.com/elarielcl/MinimalistBlockTrees/)</span>
+
 # Description
 This repository contains an implementation for the BlockTree data structure described [here](https://ieeexplore.ieee.org/document/7149265). In addition to the paper's proposal, this code contains some improvements, and heuristics to play with.
 # Installation Guide
